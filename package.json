@@ -2,13 +2,8 @@
   "name": "sanjjog-portfolio",
   "version": "1.0.0",
   "description": "Premium Portfolio for Sanjjog Shrivastava",
-  "main": "index.html",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "vite": "^5.0.0"
+    "build": "mkdir -p dist && cp -r assets index.html dist/",
+    "start": "serve dist"
   }
 }
