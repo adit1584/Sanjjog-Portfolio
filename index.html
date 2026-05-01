@@ -47,6 +47,26 @@
             --transition-smooth: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
+        /* --- Global Responsiveness Fixes --- */
+        @media (max-width: 1024px) {
+            :root {
+                --fs-base: 16px;
+                --fs-h2: 3rem;
+                --nav-height: 70px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --fs-base: 15px;
+                --fs-h2: 2.5rem;
+                --nav-height: 60px;
+            }
+            section {
+                padding: 80px 6%;
+            }
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -192,41 +212,42 @@
             color: var(--accent);
         }
 
-        .nav-links {
-            display: flex;
-            gap: 40px;
+        /* --- Mobile Navigation --- */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
         }
 
-        .nav-links a {
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted-dark);
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
+        .nav-toggle span {
+            width: 28px;
             height: 2px;
             background: var(--accent);
             transition: var(--transition-smooth);
         }
 
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        nav.scrolled .nav-links a {
-            color: var(--text-light);
-        }
-
-        .nav-links a:hover {
-            color: var(--accent);
+        @media (max-width: 900px) {
+            .nav-toggle { display: flex; }
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                height: 100vh;
+                background: var(--bg-dark);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 40px;
+                transition: var(--transition-smooth);
+                z-index: 1000;
+            }
+            .nav-links.active { right: 0; }
+            .nav-links a { font-size: 24px; color: var(--text-light) !important; }
         }
 
         /* --- Layout Sections --- */
@@ -275,7 +296,16 @@
             grid-template-columns: 1.5fr 1fr;
             gap: 80px;
             margin-top: 40px;
-            opacity: 0; /* Animated in GSAP */
+            opacity: 0;
+        }
+
+        @media (max-width: 900px) {
+            .hero-bottom {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .about-text { font-size: 1.15rem; }
+            .hero-name { font-size: clamp(2.5rem, 15vw, 6rem); }
         }
 
         .about-content h2 {
@@ -657,6 +687,14 @@
             gap: 40px;
         }
 
+        @media (max-width: 900px) {
+            .experience-card {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .exp-role h3 { font-size: 1.5rem; }
+        }
+
         .exp-date {
             font-family: 'Space Mono', monospace;
             color: var(--accent);
@@ -730,6 +768,14 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 40px;
             padding: 0 10%;
+        }
+
+        @media (max-width: 1100px) {
+            .achievement-grid { grid-template-columns: repeat(2, 1fr); padding: 0 5%; }
+        }
+
+        @media (max-width: 700px) {
+            .achievement-grid { grid-template-columns: 1fr; }
         }
 
         .achievement-card {
@@ -1079,6 +1125,11 @@
     <!-- Navigation -->
     <nav>
         <a href="#" class="logo">SJ</a>
+        <button class="nav-toggle" aria-label="Toggle Navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
         <div class="nav-links">
             <a href="#about">About</a>
             <a href="#experience">Experience</a>
@@ -1750,6 +1801,25 @@
             }, 5000);
         };
         setupCarousel();
+
+        // --- Mobile Menu Toggle ---
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (navToggle && navLinks) {
+            navToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                navToggle.classList.toggle('active');
+            });
+
+            // Close menu when clicking a link
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    navToggle.classList.remove('active');
+                });
+            });
+        }
     </script>
 </body>
 </html>
